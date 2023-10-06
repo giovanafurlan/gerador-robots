@@ -1,752 +1,244 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   Box,
   Button,
-  Divider,
+  Container,
   Flex,
   FormControl,
   FormLabel,
   Input,
-  Checkbox,
-  Text,
-  Textarea,
-  Grid,
   InputGroup,
   InputLeftElement,
-  Heading,
   InputRightElement,
-  Container,
-} from "@chakra-ui/react";
-import { FaRobot } from "react-icons/fa";
-import { MdHttp } from "react-icons/md";
-import { BsSlashLg } from "react-icons/bs";
-import { BiCopy } from "react-icons/bi";
-import CopyToClipboard from "react-copy-to-clipboard";
+  List,
+  ListItem,
+  Text,
+  Textarea,
+  useToast
+} from '@chakra-ui/react'
+import { FaRobot } from 'react-icons/fa';
+import { BiCopy } from 'react-icons/bi';
+import Script from 'next/script';
+import DualListBox from "react-dual-listbox";
+import "react-dual-listbox/lib/react-dual-listbox.css";
+import CopyToClipboard from 'react-copy-to-clipboard';
 
 const options = [
   {
-    nome: "Google",
-    id: "Google",
+    label: "Google",
+    value: "Google",
   },
   {
-    nome: "Baidu",
-    id: "Baidu",
+    label: "Baidu",
+    value: "Baidu",
   },
   {
-    nome: "Bing",
-    id: "Bing",
+    label: "Bing",
+    value: "Bing",
   },
   {
-    nome: "Moz Bot",
-    id: "MozBot",
+    label: "Moz Bot",
+    value: "MozBot",
   },
   {
-    nome: "WEBCEO",
-    id: "WEBCEO",
+    label: "WEBCEO",
+    value: "WEBCEO",
   },
   {
-    nome: "SEM RUSH",
-    id: "SemRush",
+    label: "SEM RUSH",
+    value: "SemRush",
   },
   {
-    nome: "Yandex",
-    id: "Yandex",
+    label: "Yandex",
+    value: "Yandex",
   },
   {
-    nome: "AddThis",
-    id: "AddThis",
+    label: "AddThis",
+    value: "AddThis",
   },
   {
-    nome: "AhrefsBot",
-    id: "AhrefsBot",
+    label: "AhrefsBot",
+    value: "AhrefsBot",
   },
   {
-    nome: "BDCbot",
-    id: "BDCbot",
+    label: "BDCbot",
+    value: "BDCbot",
   },
   {
-    nome: "DirBuster",
-    id: "DirBuster",
+    label: "DirBuster",
+    value: "DirBuster",
   },
   {
-    nome: "EveryoneSocial",
-    id: "EveryoneSocial",
+    label: "EveryoneSocial",
+    value: "EveryoneSocial",
   },
   {
-    nome: "Exabot",
-    id: "Exabot",
+    label: "Exabot",
+    value: "Exabot",
   },
   {
-    nome: "LinkpadBot",
-    id: "LinkpadBot",
+    label: "LinkpadBot",
+    value: "LinkpadBot",
   },
   {
-    nome: "Slurp",
-    id: "Slurp",
+    label: "Slurp",
+    value: "Slurp",
   },
   {
-    nome: "Spbot",
-    id: "Spbot",
+    label: "Spbot",
+    value: "Spbot",
   },
   {
-    nome: "TwengaBot",
-    id: "TwengaBot",
+    label: "TwengaBot",
+    value: "TwengaBot",
   },
   {
-    nome: "MJ12bot",
-    id: "MJ12bot",
+    label: "MJ12bot",
+    value: "MJ12bot",
   },
 ];
 
-export default function GeradorRobots() {
+export default function New() {
 
-  const caminhos = [];
+  const [path, setPath] = useState('/');
+  const [pathsArray, setPathsArray] = useState([]);
 
-  const [robots, setRobots] = useState(false);
-  const [badbotInput, setBadbotInput] = useState(false);
+  const [sitemap, setSiteMap] = useState();
+  const [blockeds, setBlockeds] = useState([]);
+  const [results, setResults] = useState([]);
 
-  const handleChange = (event) => {
-    if (event.target.checked) {
-      const cont = confirm("Você tem certeza que deseja permitir Bad Bots?");
-      if (cont) {
-        console.log("check");
-      }
+  const toast = useToast();
+
+  /////////////////////
+
+  const inputSubmit = (e) => {
+    e.preventDefault();
+    if (path.includes("/")) {
+      setPathsArray([...pathsArray, path]);
+      setBlockeds([...blockeds, []]);
+      setPath("/");
+    } else {
+      toast({
+        title: 'Add / in the beggining of the path',
+        status: 'error',
+        duration: 5000,
+        position: "top",
+        isClosable: true,
+      })
     }
-    setBadbotInput((current) => !current);
   };
 
-  const robotsContent = {
-    Google: (permission) => `
-    User-agent: Googlebot
-    ${permission}: /
-    User-agent: Googlebot-News
-    ${permission}: /
-    User-agent: Googlebot-Image/1.0
-    ${permission}: /
-    User-agent: Googlebot-Video/1.0
-    ${permission}: /
-    User-agent: SAMSUNG-SGH-E250/1.0 Profile/MIDP-2.0 Configuration/CLDC-1.1 UP.Browser/6.2.3.3.c.1.101 (GUI) MMP/2.0 (compatible; Googlebot-Mobile/2.1;+http://www.google.com/bot.html)
-    ${permission}: /
-    User-agent: Mozilla/5.0 (Linux; Android 6.0.1; Nexus 5X Build/MMB29P) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/41.0.2272.96 Mobile Safari/537.36 (compatible; Googlebot/2.1; +http://www.google.com/bot.html)
-    ${permission}: /
-    User-agent: (compatible; Mediapartners-Google/2.1; +http://www.google.com/bot.html)
-    ${permission}: /
-    User-agent: Mediapartners-Google${permission}: /
-    ${permission}: /
-    User-agent: AdsBot-Google (+http://www.google.com/adsbot.html)
-    ${permission}: /
-    User-agent: AdsBot-Google-Mobile-Apps
-    ${permission}: /
-  `,
-    Baidu: (permission) => `
-    User-agent: Baiduspider
-    ${permission}: / 
-    User-agent: Baiduspider-video
-    ${permission}: / 
-    User-agent: Baiduspider-image
-    ${permission}: / 
-    User-agent: Baiduspider+
-    ${permission}: /
-  `,
-    Bing: (permission) => `
-    User-agent: Bingbot
-    ${permission}: /
-  `,
-    Webpeak: (permission) => `
-    User-agent: Mozilla/5.0 (compatible; seo-audit-check-bot/1.0)
-    ${permission}: /
-    User-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36
-    ${permission}: /
-    User-agent: Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1
-    ${permission}: /
-    User-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
-    ${permission}: /
-  `,
-    WEBCEO: (permission) => `
-    User-agent: Mozilla/5.0 (compatible; online-webceo-bot/1.0; +http://online.webceo.com)
-    ${permission}: /
-    User-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/79.0.3945.88 Safari/537.36
-    ${permission}: /
-    User-agent: Mozilla/5.0 (iPhone; CPU iPhone OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/12.1 Mobile/15E148 Safari/604.1
-    ${permission}: /
-    User-agent: Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36
-    ${permission}: /
-  `,
-    SemRush: (permission) => `
-    User-agent: SiteAuditBot
-    ${permission}: /
-    User-agent: SemrushBot-BA
-    ${permission}: /
-    User-agent: SemrushBot-SI
-    ${permission}: /
-    User-agent: SemrushBot-SWA
-    ${permission}: /
-    User-agent: SemrushBot-CT
-    ${permission}: /
-    User-agent: SemrushBot-BM
-    ${permission}: /
-    User-agent: SplitSignalBot
-  `,
-    MozBot: (permission) => `
-    User-agent: Rogerbot
-    ${permission}: /
-    User-agent: dotbot 
-    ${permission}: /
-  `,
-    Yandex: (permission) => `
-    User-agent: YandexImages
-    ${permission}: /
-    User-agent: Yandex
-    ${permission}: /
-  `,
-    AddThis: (permission) => `
-    User-agent: AddThis
-    ${permission}: /
-    User-agent: AddThis.com robot tech.support@clearspring.com
-    ${permission}: /
-  `,
-    AhrefsBot: (permission) => `
-    User-agent: AhrefsBot
-    ${permission}: /
-  `,
-    BDCbot: (permission) => `
-    User-agent: BDCbot
-    ${permission}: /
-  `,
-    DirBuster: (permission) => `
-    User-agent: DirBuster-0.12
-    ${permission}: /
-  `,
-    EveryoneSocial: (permission) => `
-    User-agent: EveryoneSocialBot
-    ${permission}: /
-  `,
-    Exabot: (permission) => `
-    User-agent: Exabot
-    ${permission}: /
-  `,
-    LinkpadBot: (permission) => `
-    User-agent: LinkpadBot
-    ${permission}: /
-  `,
-    Slurp: (permission) => `
-    User-agent: Slurp
-    ${permission}: /
-  `,
-    Spbot: (permission) => `
-    User-agent: spbot
-    ${permission}: /
-  `,
-    TwengaBot: (permission) => `
-    User-agent: TwengaBot
-    ${permission}: /
-    User-agent: TwengaBot-2.0
-    ${permission}: /
-  `,
-    MJ12bot: (permission) => `
-    User-agent: MJ12bot
-    ${permission}: /
-  `,
-    Badbots: (permission) => `
-
-    User-agent: duggmirror
-    ${permission}: /
-    User-agent: 360Spider
-    ${permission}: /
-    User-agent: asterias
-    ${permission}: /
-    User-agent: BackDoorBot/1.0
-    ${permission}: /
-    User-agent: Black Hole
-    ${permission}: /
-    User-agent: BlowFish/1.0
-    ${permission}: /
-    User-agent: BotALot
-    ${permission}: /
-    User-agent: BuiltBotTough
-    ${permission}: /
-    User-agent: Bullseye/1.0
-    ${permission}: /
-    User-agent: BunnySlippers
-    ${permission}: /
-    User-agent: Cegbfeieh
-    ${permission}: /
-    User-agent: CheeseBot
-    ${permission}: /
-    User-agent: CherryPicker
-    ${permission}: /
-    User-agent: CherryPickerElite/1.0
-    ${permission}: /
-    User-agent: CherryPickerSE/1.0
-    ${permission}: /
-    User-agent: CopyRightCheck
-    ${permission}: /
-    User-agent: cosmos
-    ${permission}: /
-    User-agent: Crescent
-    ${permission}: /
-    User-agent: Crescent Internet ToolPak HTTP OLE Control v.1.0
-    ${permission}: /
-    User-agent: DittoSpyder
-    ${permission}: /
-    User-agent: EmailCollector
-    ${permission}: /
-    User-agent: EmailSiphon
-    ${permission}: /
-    User-agent: EmailWolf
-    ${permission}: /
-    User-agent: EroCrawler
-    ${permission}: /
-    User-agent: ExtractorPro
-    ${permission}: /
-    User-agent: Foobot
-    ${permission}: /
-    User-agent: Harvest/1.5
-    ${permission}: /
-    User-agent: hloader
-    ${permission}: /
-    User-agent: httplib
-    ${permission}: /
-    User-agent: humanlinks
-    ${permission}: /
-    User-agent: InfoNaviRobot
-    ${permission}: /
-    User-agent: JennyBot
-    ${permission}: /
-    User-agent: Kenjin Spider
-    ${permission}: /
-    User-agent: Keyword Density/0.9
-    ${permission}: /
-    User-agent: LexiBot
-    ${permission}: /
-    User-agent: libWeb/clsHTTP
-    ${permission}: /
-    User-agent: LinkextractorPro
-    ${permission}: /
-    User-agent: LinkScan/8.1a Unix
-    ${permission}: /
-    User-agent: LinkWalker
-    ${permission}: /
-    User-agent: LNSpiderguy
-    ${permission}: /
-    User-agent: lwp-trivial
-    ${permission}: /
-    User-agent: lwp-trivial/1.34
-    ${permission}: /
-    User-agent: Mata Hari
-    ${permission}: /
-    User-agent: Microsoft URL Control - 5.01.4511
-    ${permission}: /
-    User-agent: Microsoft URL Control - 6.00.8169
-    ${permission}: /
-    User-agent: MIIxpc
-    ${permission}: /
-    User-agent: MIIxpc/4.2
-    ${permission}: /
-    User-agent: Mister PiX
-    ${permission}: /
-    User-agent: moget
-    ${permission}: /
-    User-agent: moget/2.1
-    ${permission}: /
-    User-agent: mozilla/4
-    ${permission}: /
-    User-agent: Mozilla/4.0 (compatible; BullsEye; Windows 95)
-    ${permission}: /
-    User-agent: Mozilla/4.0 (compatible; MSIE 4.0; Windows 95)
-    ${permission}: /
-    User-agent: Mozilla/4.0 (compatible; MSIE 4.0; Windows 98)
-    ${permission}: /
-    User-agent: Mozilla/4.0 (compatible; MSIE 4.0; Windows NT)
-    ${permission}: /
-    User-agent: Mozilla/4.0 (compatible; MSIE 4.0; Windows XP)
-    ${permission}: /
-    User-agent: Mozilla/4.0 (compatible; MSIE 4.0; Windows 2000)
-    ${permission}: /
-    User-agent: Mozilla/4.0 (compatible; MSIE 4.0; Windows ME)
-    ${permission}: /
-    User-agent: mozilla/5
-    ${permission}: /
-    User-agent: NetAnts
-    ${permission}: /
-    User-agent: NICErsPRO
-    ${permission}: /
-    User-agent: Offline Explorer
-    ${permission}: /
-    User-agent: Openfind
-    ${permission}: /
-    User-agent: Openfind data gathere
-    ${permission}: /
-    User-agent: ProPowerBot/2.14
-    ${permission}: /
-    User-agent: ProWebWalker
-    ${permission}: /
-    User-agent: QueryN Metasearch
-    ${permission}: /
-    User-agent: RepoMonkey
-    ${permission}: /
-    User-agent: RepoMonkey Bait & Tackle/v1.01
-    ${permission}: /
-    User-agent: RMA
-    ${permission}: /
-    User-agent: SiteSnagger
-    ${permission}: /
-    User-agent: SpankBot
-    ${permission}: /
-    User-agent: spanner
-    ${permission}: /
-    User-agent: suzuran
-    ${permission}: /
-    User-agent: Szukacz/1.4
-    ${permission}: /
-    User-agent: Teleport
-    ${permission}: /
-    User-agent: TeleportPro
-    ${permission}: /
-    User-agent: Telesoft
-    ${permission}: /
-    User-agent: The Intraformant
-    ${permission}: /
-    User-agent: TheNomad
-    ${permission}: /
-    User-agent: TightTwatBot
-    ${permission}: /
-    User-agent: Titan
-    ${permission}: /
-    User-agent: toCrawl/UrlDispatcher
-    ${permission}: /
-    User-agent: True_Robot
-    ${permission}: /
-    User-agent: True_Robot/1.0
-    ${permission}: /
-    User-agent: turingos
-    ${permission}: /
-    User-agent: URLy Warning
-    ${permission}: /
-    User-agent: VCI
-    ${permission}: /
-    User-agent: VCI WebViewer VCI WebViewer Win32
-    ${permission}: /
-    User-agent: Web Image Collector
-    ${permission}: /
-    User-agent: WebAuto
-    ${permission}: /
-    User-agent: WebBandit
-    ${permission}: /
-    User-agent: WebBandit/3.50
-    ${permission}: /
-    User-agent: WebCopier
-    ${permission}: /
-    User-agent: WebEnhancer
-    ${permission}: /
-    User-agent: WebmasterWorldForumBot
-    ${permission}: /
-    User-agent: WebSauger
-    ${permission}: /
-    User-agent: Website Quester
-    ${permission}: /
-    User-agent: Webster Pro
-    ${permission}: /
-    User-agent: WebStripper
-    ${permission}: /
-    User-agent: WebZip
-    ${permission}: /
-    User-agent: WebZip/4.0
-    ${permission}: /
-    User-agent: WhatWeb/0.4.7
-    ${permission}: /
-    User-agent: Wget
-    ${permission}: /
-    User-agent: Wget/1.5.3
-    ${permission}: /
-    User-agent: Wget/1.6
-    ${permission}: /
-    User-agent: WWW-Collector-E
-    ${permission}: /
-    User-agent: Xenu's
-    ${permission}: /
-    User-agent: Xenu's Link Sleuth 1.1c
-    ${permission}: /
-    User-agent: Zeus
-    ${permission}: /
-    User-agent: Zeus 32297 Webster Pro V2.9 Win32  
-    ${permission}: /
-  `,
+  const handleDelete = (index) => {
+    setPathsArray(pathsArray.filter((_, i) => i !== index));
+    setBlockeds(blockeds.filter((_, i) => i !== index));
   };
 
-  function adicionarCaminho() {
-    const path = document.querySelector(".path").value;
-    if (path[0] !== "/") return;
-    caminhos.push(path);
-
-    renderizarCaminhos();
-  }
-
-  function removerCaminho(index) {
-    caminhos.splice(Number(index), 1);
-
-    renderizarCaminhos();
-  }
-
-  function renderizarCaminhos() {
-    const createLiElement = () => document.createElement("GridItem");
-    const createButtonElement = () => document.createElement("button");
-
-    var listaDeCaminhos = " ";
-
-    listaDeCaminhos = document.querySelector(".paths-ul");
-    if (listaDeCaminhos != null) {
-      listaDeCaminhos.style.display = "flex";
-      listaDeCaminhos.style.flexWrap = "wrap";
-      listaDeCaminhos.innerHTML = "";
-    }
-
-    caminhos.forEach((caminho, index) => {
-      const li = createLiElement();
-      li.style.marginRight = "10px";
-      li.style.marginTop = "10px";
-      li.style.padding = "4px 10px 4px 10px";
-      li.style.backgroundColor = "#F3F5FA";
-      li.style.color = "#7B61FF";
-      li.style.border = "1px solid #F3F5FA";
-      li.style.borderRadius = "5px";
-
-      const button = createButtonElement();
-      button.style.fontSize = "12px";
-      button.style.marginLeft = "10px";
-      button.style.color = "#7B61FF";
-
-      li.innerHTML = caminho;
-      button.innerHTML = "X";
-      button.onclick = () => {
-        removerCaminho(index);
-      };
-
-      li.appendChild(button);
-      listaDeCaminhos.appendChild(li);
+  const handleDualListBoxChange = (index, newBlockedItems) => {
+    setBlockeds((prevBlockeds) => {
+      const newState = [...prevBlockeds];
+      newState[index] = newBlockedItems;
+      return newState;
     });
-  }
+  };
 
-  function gerar() {
-    const checkboxElementos = document.querySelectorAll(
-      ".opcoes .checkbox input"
-    );
+  const generateResult = () => {
+    const agentRules = {};
 
-    const sitemap = document.querySelector(".sitemap").value;
-    const pathsBloqueadosInput = caminhos;
-    
-    const { permitidos, bloqueados } = gerarListaDeElementos(checkboxElementos);
+    pathsArray.forEach((path, index) => {
+      const blockedList = blockeds[index];
+      const allowedList = options.filter(option => !blockedList.includes(option.value));
 
-    let auxiliar = ``;
-
-    if (pathsBloqueadosInput[0]) {
-      auxiliar += `User-agent: *\n`;
-    }
-
-    pathsBloqueadosInput.forEach((path) => {
-      auxiliar += `Disallow: ${path} \n`;
+      options.forEach(option => {
+        const agentName = option.label;
+        if (blockedList.includes(option.value)) {
+          agentRules[agentName] = agentRules[agentName] || [];
+          agentRules[agentName].push(`Disallow: ${path}`);
+        } else {
+          agentRules[agentName] = agentRules[agentName] || [];
+          agentRules[agentName].push(`Allow: ${path}`);
+        }
+      });
     });
 
-    permitidos.forEach((mecanismo) => {
-      auxiliar += robotsContent[mecanismo]("Allow").replaceAll(" ", "");
+    const finalResult = Object.entries(agentRules).map(([agent, rules]) => {
+      return `User-agent: ${agent}\n${rules.join('\n')}`;
     });
 
-    bloqueados.forEach((mecanismo) => {
-      auxiliar += robotsContent[mecanismo]("Disallow").replaceAll(" ", "");
-    });
+    const result = finalResult.concat(" ", `Sitemap: ${sitemap}`);
 
-    if (
-      sitemap.includes("https://") ||
-      sitemap.includes("HTTPS://") ||
-      sitemap.includes("http://") ||
-      sitemap.includes("HTTP://") ||
-      sitemap.includes("www.") ||
-      sitemap.includes("WWW.")
-    ) {
-      auxiliar += `Sitemap: ${sitemap}\n`;
-    }
+    const textoFormatado = result.toString().replace(/,/g, ',\n').replaceAll(",", '');
+    setResults(textoFormatado);
 
-    const robots = auxiliar.replaceAll(" ", "").replaceAll("\n\n", "\n");
-
-    renderizarRobots(robots);
-  }
-
-  function renderizarRobots(robots) {
-    const textarea = document.querySelector("#result");
-    textarea.value = robots;
-    setRobots(robots);
-  }
-
-  function gerarListaDeElementos(elementos) {
-    const permitidos = [];
-    const bloqueados = [];
-    elementos.forEach((elemento) => {
-      if (elemento.checked) {
-        permitidos.push(elemento.name);
-      } else {
-        bloqueados.push(elemento.name);
-      }
-    });
-
-    return {
-      permitidos,
-      bloqueados,
-    };
-  }
+  };
 
   return (
-    <Container display={"flex"} flexDir={"column"} gap="6" maxW={"6xl"} py="6">
-      <Flex align={"center"} gap="4" className="blocked-paths">
+    <>
+      <Script src="https://kit.fontawesome.com/08df0b650e.js" crossOrigin="anonymous"></Script>
+      <Container maxW={"6xl"} display={"flex"} flexDir={"column"} py={6} gap={6}>
+        <form onSubmit={inputSubmit} style={{ display: "flex", alignItems: "center", gap: 4 }}>
+          <FormLabel>Paths</FormLabel>
+          <Input type="text" value={path} onChange={(e) => setPath(e.target.value)} placeholder="Enter a path" />
+          <Button type="submit">Add path</Button>
+        </form>
+        <List>
+          {pathsArray.map((path, index) => (
+            <Box key={index} py={2}>
+              <ListItem py={2}>
+                {index + 1}- {path}
+                <Button onClick={() => handleDelete(index)}>Delete</Button>
+              </ListItem>
+              <Flex justifyContent="space-evenly">
+                <Text>
+                  Allow
+                </Text>
+                <Text>
+                  Block
+                </Text>
+              </Flex>
+              <DualListBox
+                key={index}
+                options={options}
+                selected={blockeds[index]} // Usando a seleção do componente específico
+                onChange={(newBlockedItems) => handleDualListBoxChange(index, newBlockedItems)}
+              />
+            </Box>
+          ))}
+        </List>
+        <Input type="text" value={sitemap} onChange={(e) => setSiteMap(e.target.value)} placeholder="Enter sitemaps separated by comma" />
+        <Button onClick={generateResult}>Gerar</Button>
+        {/* <pre>
+          <code>
+            {results.map((rule, index) => (
+              <div key={index}>{rule}</div>
+            ))}
+          </code>
+        </pre> */}
         <FormControl>
-          <FormLabel>
-            Insira Caminho
-          </FormLabel>
+          <FormLabel htmlFor="result" display="none"></FormLabel>
           <InputGroup>
-            <InputLeftElement
-              pointerEvents="none"
-              h="full"
-              // eslint-disable-next-line react/no-children-prop
-              children={<BsSlashLg />}
+            {/* eslint-disable-next-line react/no-children-prop */}
+            <InputLeftElement pointerEvents="none" children={<FaRobot />} />
+            <Textarea
+              pos={"relative"}
+              borderRadius={"5px"}
+              px="35px!important"
+              p="10px"
+              rows={10}
+              spellCheck="false"
+              defaultValue={results}
             />
-            <Input
-              className="path"
-              type="text"
-              pl="35px!important"
+            <InputRightElement
+              cursor={"pointer"}
+              // eslint-disable-next-line react/no-children-prop
+              children={
+                <CopyToClipboard text={results}>
+                  <BiCopy color="#5B1AB2" />
+                </CopyToClipboard>
+              }
             />
           </InputGroup>
         </FormControl>
-        <Button
-          mt="6"
-          onClick={adicionarCaminho}
-          type="button"
-        >
-          Adicionar Caminho
-        </Button>
-      </Flex>
-      <Box className="paths">
-        <Text as="h2">Página Indexar</Text>
-        <Box className="paths-ul"></Box>
-      </Box>
-      <Text as="h2">Mecanismo Busca</Text>
-      <Grid
-        templateColumns={{
-          lg: "repeat(4,1fr)",
-          sm: "repeat(2,1fr)",
-        }}
-        className="opcoes"
-        gap="4"
-      >
-        {options.map((item, idx) => (
-          <Option key={idx} nome={item.nome} id={item.id} />
-        ))}
-        <Flex flexDir={"column"}>
-          <Flex className={"checkbox"} justifyContent={"space-between"}>
-            <FormLabel fontSize={"md"} htmlFor={"Badbots"}>
-              Bad Bots
-            </FormLabel>
-            <Checkbox
-              onChange={handleChange}
-              value={badbotInput}
-              className="input"
-              id={"Badbots"}
-              name={"Badbots"}
-              colorScheme="red"
-              size="lg"
-            />
-          </Flex>
-          <Divider />
-        </Flex>
-      </Grid>
-      <Heading>Site Map</Heading>
-      <FormControl className="form" fontSize={"x-large"}>
-        <Flex flexDir={"column"} gap="8">
-          <Flex gap="4" align={"center"}>
-            {/* <Input
-                className="sitemap"
-                type="text"
-                borderRadius={"30px"}
-                borderColor={border}
-                placeholder={t("insiraSiteMap")}
-              /> */}
-            <FormControl>
-              <FormLabel>
-                Insira SiteMap
-              </FormLabel>
-              <InputGroup>
-                <InputLeftElement
-                  pointerEvents="none"
-                  h="full"
-                  // eslint-disable-next-line react/no-children-prop
-                  children={<MdHttp />}
-                />
-                <Input
-                  className="sitemap"
-                  type="text"
-                  pl="35px!important"
-                />
-              </InputGroup>
-            </FormControl>
-            <Button
-              mt="6"
-              onClick={gerar}
-              className="gerar-robots"
-              id="gerar-robots"
-              type="button"
-            >
-              Gerar Robots
-            </Button>
-          </Flex>
-          <FormControl>
-            <FormLabel htmlFor="result" display="none"></FormLabel>
-            <InputGroup>
-              {/* eslint-disable-next-line react/no-children-prop */}
-              <InputLeftElement pointerEvents="none" children={<FaRobot />} />
-              <Textarea
-                pos={"relative"}
-                id="result"
-                borderRadius={"5px"}
-                px="35px!important"
-                p="10px"
-                rows={10}
-                spellCheck="false"
-              />
-              <InputRightElement
-                cursor={"pointer"}
-                // eslint-disable-next-line react/no-children-prop
-                children={
-                  <CopyToClipboard text={robots}>
-                    <BiCopy color="#5B1AB2" />
-                  </CopyToClipboard>
-                }
-              />
-            </InputGroup>
-          </FormControl>
-        </Flex>
-      </FormControl>
-    </Container>
-  );
-}
-
-function Option({ nome, id }) {
-  return (
-    <Flex flexDir={"column"}>
-      <Flex
-        className={"checkbox"}
-        justifyContent={"space-between"}
-        align={"center"}
-      >
-        <FormLabel fontSize={"md"} htmlFor={id}>
-          {nome}
-        </FormLabel>
-        <Checkbox
-          className="input"
-          id={id}
-          name={id}
-          size="lg"
-          defaultChecked
-        />
-      </Flex>
-      <Divider />
-    </Flex>
-  );
+      </Container>
+    </>
+  )
 }
