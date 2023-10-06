@@ -174,11 +174,22 @@ export default function New() {
   return (
     <>
       <Script src="https://kit.fontawesome.com/08df0b650e.js" crossOrigin="anonymous"></Script>
-      <Container maxW={"6xl"} display={"flex"} flexDir={"column"} py={6} gap={6}>
-        <form onSubmit={inputSubmit} style={{ display: "flex", alignItems: "center", gap: 4 }}>
-          <FormLabel>Paths</FormLabel>
+      <Container
+        maxW={"6xl"}
+        display={"flex"}
+        flexDir={"column"}
+        py={6}
+        gap={6}>
+        <form
+          onSubmit={inputSubmit}
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 4
+          }}>
+          <FormLabel>Páginas</FormLabel>
           <Input type="text" value={path} onChange={(e) => setPath(e.target.value)} placeholder="Enter a path" />
-          <Button type="submit">Add path</Button>
+          <Button type="submit">Adicionar</Button>
         </form>
         <List>
           {pathsArray.map((path, index) => (
@@ -187,12 +198,12 @@ export default function New() {
                 {index + 1}- {path}
                 <Button onClick={() => handleDelete(index)}>Delete</Button>
               </ListItem>
-              <Flex justifyContent="space-evenly">
+              <Flex justifyContent="space-evenly" fontWeight={"bold"}>
                 <Text>
-                  Allow
+                  Permitir
                 </Text>
                 <Text>
-                  Block
+                  Bloquear
                 </Text>
               </Flex>
               <DualListBox
@@ -204,7 +215,7 @@ export default function New() {
             </Box>
           ))}
         </List>
-        <Input type="text" value={sitemap} onChange={(e) => setSiteMap(e.target.value)} placeholder="Enter sitemaps separated by comma" />
+        <Input type="text" value={sitemap} onChange={(e) => setSiteMap(e.target.value)} placeholder="Sitemaps separados por vírgula" />
         <Button onClick={generateResult}>Gerar</Button>
         {/* <pre>
           <code>
@@ -232,7 +243,7 @@ export default function New() {
               // eslint-disable-next-line react/no-children-prop
               children={
                 <CopyToClipboard text={results}>
-                  <BiCopy color="#5B1AB2" />
+                  <BiCopy />
                 </CopyToClipboard>
               }
             />
