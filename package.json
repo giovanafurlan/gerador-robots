@@ -22,6 +22,7 @@
     "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "18.2.0",
     "react-dual-listbox": "^5.0.2",
-    "react-icons": "^4.11.0"
+    "react-icons": "^4.11.0",
+    "styled-components": "^6.0.8"
   }
 }
