@@ -30,9 +30,6 @@ import CopyToClipboard from 'react-copy-to-clipboard';
 import styled from 'styled-components';
 
 const Style = styled.div`
-.react-dual-listbox select{
-  min-height: 300px;
-}
 input{
   border-radius: 6px;
 }
@@ -235,7 +232,7 @@ export default function New() {
             </Flex>
           </FormControl>
         </form>
-        <Grid templateColumns={{ lg: pathsArray.length >= 2 ? "repeat(2,1fr)" : "repeat(1,1fr)" }} gap="4">
+        <Grid templateColumns={{ lg: pathsArray.length >= 2 ? "repeat(2,1fr)" : "repeat(1,1fr)" }} gap="2">
           {pathsArray.map((path, index) => (
             <GridItem key={index}
               border="1px"
